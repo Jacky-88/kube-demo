@@ -28,13 +28,63 @@ func (p *pod) GetPods(ctx *gin.Context) {
 			"data": nil,
 		})
 	}
-	client ,err := service.K8s.GetClient(params.Cluster)
+	client, err := service.K8s.GetClient(params.Cluster)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{
-						"msg":  err.Error(),
-						"data": nil,
+			"msg":  err.Error(),
+			"data": nil,
+		})
+		return
+	}
+	//service中的的方法通过 包名.结构体变量名.方法名 使用，serivce.Pod.GetPods()
+	data, err := service.Pod.GetPods(client, params.FilterName, params.Namespace, params.Limit, params.Page)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"msg":  err.Error(),
+			"data": nil,
 		})
 	}
-	data ,err := service.
 
+	ctx.JSON(http.StatusOK, gin.H{
+		"msg":  "获取pod列表成功",
+		"data": data,
+	})
+
+}
+
+// 获取pod详情
+func (p *pod) GetPodDetail(ctx *gin.Context) {
+	params := new(struct {
+		PodName   string `form:"pod_name"`
+		Namespace string `form:"namespace"`
+		Cluster   string `form:"cluster"`
+	})
+	if err := ctx.Bind(params); err != nil {
+		logger.Error("Bind请求参数失败." + err.Error())
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"msg":  err.Error(),
+			"data": nil,
+		})
+		return
+	}
+	client, err := service.K8s.GetClient(params.Cluster)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"msg":  err.Error(),
+			"data": nil,
+		})
+		return
+	}
+	data, err := service.Pod.GetPodDetail(client, params.PodName, params.Namespace)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"msg":  err.Error(),
+			"data": nil,
+		})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"msg":  "获取pod详情成功",
+		"data": data,
+	})
 }
