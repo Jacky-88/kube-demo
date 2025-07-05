@@ -1,6 +1,9 @@
 package service
 
 import (
+	"context"
+	"errors"
+	"github.com/wonderivan/logger"
 	appsv1 "k8s.io/api/apps/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
@@ -20,5 +23,13 @@ type DeploymentResp struct {
 func (d *deployment) GetDeployments(client *kubernetes.Clientset, filterName,
 	namespace string, limit, page int) (deploymentResp *DeploymentResp, err error) {
 	//获取deployment类型的deployment列表
-	deploymentList, err := client.AppsV1().Deployments(namespace).List(metav1.ListOptions{})
+	deploymentList, err := client.AppsV1().Deployments(namespace).List(context.TODO(), metav1.ListOptions{})
+	if err != nil {
+		logger.Error("获取Deployment列表失败." + err.Error())
+		return nil, errors.New("获取Deployment列表失败." + err.Error())
+	}
+	//将deploymentList中的deployment列表(Items)，放进dataselector对象中，进行排序
+	selectableData := &dataSelector{
+		GenericDataList: d.toCells(deploymentList.Items),
+	}
 }
