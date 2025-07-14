@@ -4,6 +4,8 @@ go 1.23.0
 
 toolchain go1.23.4
 
+replace github.com/Jacky-88/go-base-framework => ../go-base-framework
+
 require (
 	github.com/gin-gonic/gin v1.10.0
 	github.com/wonderivan/logger v1.0.0

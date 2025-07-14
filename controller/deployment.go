@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/wonderivan/logger"
 	"k8s-demo-test/service"
@@ -36,5 +37,7 @@ func (d *deployment) GetDeployments(ctx *gin.Context) {
 		})
 		return
 	}
+
+	fmt.Println(client)
 
 }

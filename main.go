@@ -1,7 +1,9 @@
 package main
 
 import (
+	""
 	"context"
+	"github.com/Jacky-88/go-base-framework"
 	"github.com/gin-gonic/gin"
 	"github.com/wonderivan/logger"
 	"k8s-demo-test/config"
@@ -14,6 +16,9 @@ import (
 )
 
 func main() {
+
+	// test
+
 	// 初始化K8s clientset
 	service.K8s.Init()
 	// 初始化路由配置

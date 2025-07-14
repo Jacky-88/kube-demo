@@ -1,0 +1,3 @@
+[submodule "go-base-framework"]
+	path = go-base-framework
+	url = https://github.com/Jacky-88/go-base-framework.git
